@@ -25,15 +25,38 @@ const scene = new THREE.Scene();
 const geo = new THREE.IcosahedronGeometry(1.0, 2);
 
 // Создам базовый материал для сетки (меша)
-const mat = new THREE.MeshBasicMaterial({
-  color: 0xccff,
+const mat = new THREE.MeshStandardMaterial({
+  color: 0xffffff,
+  flatShading: true,
 });
 
 // Создам сетку (меш) с использованием заданных ранее геометрии и материала
 const mesh = new THREE.Mesh(geo, mat);
-
 // Добавлю созданную сетку (меш) в сцену
 scene.add(mesh);
 
-// Render
-renderer.render(scene, camera);
+// Добавлю линии меша каркаса икосаэдра
+const wireMat = new THREE.MeshBasicMaterial({
+  color: 0xffffff,
+  wireframe: true,
+});
+const wireMesh = new THREE.Mesh(geo, wireMat);
+wireMesh.scale.setScalar(1.001); // убирает фликеринг
+mesh.add(wireMesh);
+
+// hemiLight - это переменная для хранения объекта света.  new THREE.HemisphereLight - создаю объект света
+const hemiLight = new THREE.HemisphereLight(0x0099ff, 0xaa5500);
+scene.add(hemiLight);
+
+// Add an animation
+function animate(t = 0) {
+  //   console.log(t);
+  requestAnimationFrame(animate); // Запрашивается следующий кадр анимации. Рекурсия - для непрерывности анимации
+  //   mesh.scale.setScalar(Math.cos(t * 0.001) + 1.0); // устанавливает масщтаб по всем осям (x, y, z) одинаково используя это значение. Икосаэдр будет пульсировать, изменяя свой размер в зависимости от косинуса функции (Math.cos) времени
+  mesh.rotation.y = t * 0.0001;
+
+  // Render
+  renderer.render(scene, camera);
+}
+
+animate();
