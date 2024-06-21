@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { OrbitControls } from "jsm/controls/OrbitControls.js"; // OrbitControls позволяет пользователю вращать, увеличивать и панорамировать камеру с помощью мыши
 
 // CORE of this Project
 // Set the size of the window
@@ -20,6 +21,17 @@ const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 camera.position.z = 2;
 const scene = new THREE.Scene();
 // CORE of this Project
+
+// controls
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.03;
+
+// // Наклон оси
+// const tiltAngle = THREE.MathUtils.degToRad(23.5);
+// const axis = new THREE.Vector3(1, 0, 0);
+// mesh.rotateOnAxis(axis, tiltAngle);
+// wireMesh.rotateOnAxis(axis, tiltAngle);
 
 // Создам икосаэдр (первый аргумент(1.0) - радиус / второй аргумент(2) - детализация - чем больше, тем более гладкой будет поверхность икосаэдра)
 const geo = new THREE.IcosahedronGeometry(1.0, 2);
@@ -57,6 +69,7 @@ function animate(t = 0) {
 
   // Render
   renderer.render(scene, camera);
+  controls.update();
 }
 
 animate();
